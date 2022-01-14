@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>RPS</title>
+    <link rel="stylesheet" href="styles/main.css">
+  </head>
+  <body>
+    <div class="rps-wrapper">
+      <ul id="events"></ul>
+
+      <div class="button-wrapper">
+        <form id="chat-form">
+          <input id="chat" />
+          <button id="say">Say</button>
+        </form>
+
+        <button id="rock">Rock</button>
+        <button id="paper">Paper</button>
+        <button id="scissors">Scissors</button>
+
+        <form id="create-form">
+            <input id="create-chat" />
+            <button id="create">CREATE</button>
+        </form>
+        <form id="delete-form">
+            <input id="delete-chat" />
+            <button id="delete">DELETE</button>
+        </form>
+        <form id="update-form">
+            <input id="update-chat1" />
+            <input id="update-chat2" />
+            <button id="update">UPDATE</button>
+        </form>
+        <button id="list">LIST</button>
+        
+      </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="src/client.js"></script>
+  </body>
+</html>
