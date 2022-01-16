@@ -36,27 +36,31 @@ io.on('connection', (sock) => {
     io.emit('message', text);
   });
 
+  async function creation(text, text1, text2){
+    const blog = new Blog({
+      title: text,
+      price: text1,
+      description: text2
+    });
+
+    await blog.save()
+      .then((result) => {
+          listing();
+          sock.emit("created");
+      })
+      .catch((err) => {
+          console.log("ERROR in create: ", err);
+      });
+  }
+
   async function creating(text, text1, text2) {
-    Blog.find({title: text})
+    await Blog.find({title: text})
       .then((result) =>  {
         if (result.length > 0){
           sock.emit("title-exists");
         }
         else{
-          const blog = new Blog({
-            title: text,
-            price: text1,
-            description: text2
-          });
-    
-          blog.save()
-              .then((result) => {
-                  listing();
-                  sock.emit("created");
-              })
-              .catch((err) => {
-                  console.log("ERROR in create: ", err);
-              });
+          creation(text, text1, text2);
         }
       })
       .catch((err) => {
@@ -69,20 +73,15 @@ io.on('connection', (sock) => {
     creating(text, text1, text2);
   });
 
+  async function deletion(text1){
+    await Blog.deleteOne({title: text1}).catch((err) => console.log("Error in deleting in update: ", err));
+  }
+
   async function deleting(text) {
     Blog.find({title: text})
       .then((result) => {
         if (result.length > 0){
-          Blog.deleteOne({title: text})
-            .then((result) => {
-              if (result){
-                listing();
-                sock.emit("deleted");
-              }
-            })
-            .catch((err) => {
-                console.log("ERROR in delete: ", err);
-            });
+          deletion(text);
         }
         else{
           sock.emit("title-dne");
@@ -98,26 +97,35 @@ io.on('connection', (sock) => {
       deleting(text);
   });
 
-  async function deleteForUpdate(text1){
-    await Blog.deleteOne({title: text1}).catch((err) => console.log("Error in deleting in update: ", err));
-  }
+  
 
   sock.on('update', (text1, text2, text3, text4) => {
       console.log('updating...');
       Blog.find({title: text1})
         .then((result) => {
           if(result.length > 0){
-            if (text2 == ""){
-              text2 = result[0].title;
-            }
-            if (text3 == ""){
-              text3 = result[0].price;
-            }
-            if (text4 == ""){
-              text4 = result[0].description;
-            }
-            deleteForUpdate(text1);
-            creating(text2, text3, text4);
+            Blog.find({title: text2})
+            .then((result2) => {
+              if (result2.length > 0){
+                sock.emit('title-exists');
+              }
+              else{
+                if (text2 == ""){
+                  text2 = result[0].title;
+                }
+                if (text3 == ""){
+                  text3 = result[0].price;
+                }
+                if (text4 == ""){
+                  text4 = result[0].description;
+                }
+                deletion(text1);
+                creation(text2, text3, text4);
+              }
+            })
+            .else((err) => {
+              console.log("Error in updating: ", err);
+            })
           }
           else {
             sock.emit('title-dne');

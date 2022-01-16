@@ -15,7 +15,13 @@ const create = (e) => {
     const input2 = document.querySelector('#create-description');
     const text2 = input2.value.trim();
     input2.value = '';
-    sock.emit('create', text, text1, text2);
+
+    if ((text == "") || (text1 == "") || (text2 == "")){
+        alert("all fields are required to be filled in");
+    }
+    else{
+        sock.emit('create', text, text1, text2);
+    }
 }
 document
     .querySelector('#create-form')
@@ -52,7 +58,12 @@ const update = (e) => {
     const text4 = input4.value.trim();
     input4.value = '';
 
-    sock.emit('update', text1, text2, text3, text4);
+    if ((text2 == "") && (text3 == "") && (text4 == "")){
+        alert("Please add a new information to update");
+    }
+    else{
+        sock.emit('update', text1, text2, text3, text4);
+    }
 }
 document
     .querySelector('#update-form')
