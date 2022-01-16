@@ -37,7 +37,7 @@ io.on('connection', (sock) => {
   });
 
   async function creating(text) {
-    Blog.find({title: text})
+    /*Blog.find({title: text})
       .then((result) =>  {
         if (result.length > 0){
           sock.emit("title-exists");
@@ -47,20 +47,33 @@ io.on('connection', (sock) => {
             title: text,
             snippet: 'hello',
             body: 'bye'
-        });
+          });
     
-        await blog.save()
-            .then((result) => {
-                sock.emit("created");
-            })
-            .catch((err) => {
-                console.log("ERROR in create: ", err);
-            });
+          await blog.save()
+              .then((result) => {
+                  sock.emit("created");
+              })
+              .catch((err) => {
+                  console.log("ERROR in create: ", err);
+              });
         }
       })
       .catch((err) => {
         console.log("Error in finding in create: ", err);
+      });*/
+      const blog = new Blog({
+        title: text,
+        snippet: 'hello',
+        body: 'bye'
       });
+
+      await blog.save()
+          .then((result) => {
+              sock.emit("created");
+          })
+          .catch((err) => {
+              console.log("ERROR in create: ", err);
+          });
   }
 
   sock.on('create', (text) => {
