@@ -82,6 +82,7 @@ io.on('connection', (sock) => {
       .then((result) => {
         if (result.length > 0){
           deletion(text);
+          listing();
         }
         else{
           sock.emit("title-dne");
