@@ -14,26 +14,30 @@
           <button id="say">Say</button>
         </form>
 
-        <button id="rock">Rock</button>
-        <button id="paper">Paper</button>
-        <button id="scissors">Scissors</button>
 
         <form id="create-form">
-            <input id="create-chat" />
-            <button id="create">CREATE</button>
+          <p>title <input id="create-chat" />   
+            price <input type="number" id="create-price" />  
+            description <input id="create-description" />
+            <button id="create"> CREATE</button></p>
         </form>
         <form id="delete-form">
-            <input id="delete-chat" />
-            <button id="delete">DELETE</button>
+          <p>title <input id="delete-chat" />   
+            <!--price <input id="delete-price" />  
+            description <input id="delete-description" />-->
+            <button id="delete"> DELETE</button></p>
         </form>
         <form id="update-form">
-            <input id="update-chat1" />
-            <input id="update-chat2" />
-            <button id="update">UPDATE</button>
+          <p>title <input id="update-chat1" />  
+            new title <input id="update-chat2" /> 
+            new price <input id="update-price" /> 
+            new description <input id="update-description" /> 
+            <button id="update">UPDATE</button></p>
         </form>
         <button id="list">LIST</button>
         
       </div>
+      <div id="tables"></div>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>

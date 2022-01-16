@@ -6,8 +6,8 @@ const blogSchema = new Schema({
         type: String,
         required: true
     },
-    snippet: {
-        type: String,
+    price: {
+        type: Number,
         required: true,
     },
     body: {

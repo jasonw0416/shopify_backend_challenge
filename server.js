@@ -36,8 +36,8 @@ io.on('connection', (sock) => {
     io.emit('message', text);
   });
 
-  async function creating(text) {
-    /*Blog.find({title: text})
+  async function creating(text, text1, text2) {
+    Blog.find({title: text})
       .then((result) =>  {
         if (result.length > 0){
           sock.emit("title-exists");
@@ -45,12 +45,13 @@ io.on('connection', (sock) => {
         else{
           const blog = new Blog({
             title: text,
-            snippet: 'hello',
-            body: 'bye'
+            price: text1,
+            body: text2
           });
     
-          await blog.save()
+          blog.save()
               .then((result) => {
+                  listing();
                   sock.emit("created");
               })
               .catch((err) => {
@@ -60,35 +61,34 @@ io.on('connection', (sock) => {
       })
       .catch((err) => {
         console.log("Error in finding in create: ", err);
-      });*/
-      const blog = new Blog({
-        title: text,
-        snippet: 'hello',
-        body: 'bye'
       });
-
-      await blog.save()
-          .then((result) => {
-              sock.emit("created");
-          })
-          .catch((err) => {
-              console.log("ERROR in create: ", err);
-          });
   }
 
-  sock.on('create', (text) => {
+  sock.on('create', (text, text1, text2) => {
     console.log('creating...');
-    creating(text);
+    creating(text, text1, text2);
   });
 
   async function deleting(text) {
-    await Blog.deleteOne({title: text})
-    .then((result) => {
-        io.emit("deleted");
-    })
-    .catch((err) => {
-        console.log("ERROR in delete: ", err);
-    });
+    Blog.find({title: text})
+      .then((result) => {
+        if (result.length > 0){
+          Blog.deleteOne({title: text})
+            .then((result) => {
+              if (result)
+                sock.emit("deleted");
+            })
+            .catch((err) => {
+                console.log("ERROR in delete: ", err);
+            });
+        }
+        else{
+          sock.emit("title-dne");
+        }
+      })
+      .catch((err) => {
+        console.log("Error in finding in delete: ", err);
+      });
   }
 
   sock.on('delete', (text) => {
@@ -103,7 +103,11 @@ io.on('connection', (sock) => {
   });
 
   sock.on('list', function(){
-      Blog.find()
+      listing()
+  });
+
+  async function listing(){
+    Blog.find()
         .then((result) => {
             console.log("got it");
             console.log(result);
@@ -111,8 +115,10 @@ io.on('connection', (sock) => {
         })
         .catch((err) => {
             console.log("ERROR in list: ", err);
-        })
-  });
+        });
+  }
+
+  listing();
   
 
 });
