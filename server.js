@@ -37,20 +37,32 @@ io.on('connection', (sock) => {
   });
 
   async function creating(text) {
-    const blog = new Blog({
-        title: text,
-        snippet: 'hello',
-        body: 'bye'
-    });
-
-    await blog.save()
-        .then((result) => {
-            sock.emit("created");
-        })
-        .catch((err) => {
-            console.log("ERROR in create: ", err);
+    Blog.find({title: text})
+      .then((result) =>  {
+        if (result.length > 0){
+          sock.emit("title-exists");
+        }
+        else{
+          const blog = new Blog({
+            title: text,
+            snippet: 'hello',
+            body: 'bye'
         });
+    
+        await blog.save()
+            .then((result) => {
+                sock.emit("created");
+            })
+            .catch((err) => {
+                console.log("ERROR in create: ", err);
+            });
+        }
+      })
+      .catch((err) => {
+        console.log("Error in finding in create: ", err);
+      });
   }
+
   sock.on('create', (text) => {
     console.log('creating...');
     creating(text);
