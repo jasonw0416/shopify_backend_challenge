@@ -1,42 +1,11 @@
 const sock = io();
 
-const writeEvent = (text) => {
-    // <ul> element
-    const parent = document.querySelector('#events');
-  
-    // <li> element
-    const el = document.createElement('li');
-    el.innerHTML = text;
-  
-    parent.appendChild(el);
-};
-
-  
-const onFormSubmitted = (e) => {
-    e.preventDefault();
-  
-    const input = document.querySelector('#chat');
-    const text = input.value;
-    input.value = '';
-  
-    sock.emit('message', text);
-};
-  
-writeEvent('Welcome to RPS');
-  
-  
-sock.on('message', writeEvent);
-  
-document
-    .querySelector('#chat-form')
-    .addEventListener('submit', onFormSubmitted);
 
 
 const create = (e) => {
     e.preventDefault();
-    writeEvent("Creating...");
     const input = document.querySelector('#create-chat');
-    const text = input.value;
+    const text = input.value.trim();
     input.value = '';
 
     const input1 = document.querySelector('#create-price');
@@ -44,22 +13,19 @@ const create = (e) => {
     input1.value = '';
 
     const input2 = document.querySelector('#create-description');
-    const text2 = input2.value;
+    const text2 = input2.value.trim();
     input2.value = '';
     sock.emit('create', text, text1, text2);
 }
 document
     .querySelector('#create-form')
     .addEventListener('submit', create);
-//document.querySelector('#create').addEventListener('click', create);
 
-//sock.on("created", writeEvent);
 
 const del = (e) => {
     e.preventDefault();
-    writeEvent("Deleting...");
     const input = document.querySelector('#delete-chat');
-    const text = input.value;
+    const text = input.value.trim();
     input.value = '';
 
     sock.emit('delete', text);
@@ -67,19 +33,15 @@ const del = (e) => {
 document
     .querySelector('#delete-form')
     .addEventListener('submit', del);
-//document.querySelector('#delete').addEventListener('click', del);
-
-//sock.on("deleted", writeEvent);
 
 const update = (e) => {
     e.preventDefault();
-    writeEvent("Updating...");
     const input1 = document.querySelector('#update-chat1');
-    const text1 = input1.value;
+    const text1 = input1.value.trim();
     input1.value = '';
     
     const input2 = document.querySelector('#update-chat2');
-    const text2 = input2.value;
+    const text2 = input2.value.trim();
     input2.value = '';
 
     const input3 = document.querySelector('#update-price');
@@ -87,7 +49,7 @@ const update = (e) => {
     input3.value = '';
 
     const input4 = document.querySelector('#update-description');
-    const text4 = input4.value;
+    const text4 = input4.value.trim();
     input4.value = '';
 
     sock.emit('update', text1, text2, text3, text4);
@@ -95,23 +57,6 @@ const update = (e) => {
 document
     .querySelector('#update-form')
     .addEventListener('submit', update);
-//document.querySelector('#update').addEventListener('click', update);
-
-const list = (e) => {
-    writeEvent("Listing...");
-    sock.emit('list');
-}
-document.querySelector('#list').addEventListener('click', list);
-
-/*sock.on('listed', (data) => {
-    if(data.length > 0){
-        data.forEach(datum => {
-            writeEvent(datum.title);
-            writeEvent(datum.price);
-            writeEvent(datum.body);
-        })
-    }
-});*/
 
 sock.on('listed', (data) => {
     if (data.length > 0){
@@ -150,7 +95,7 @@ sock.on('listed', (data) => {
             td2.appendChild(tdText2);
 
             var td3 = document.createElement("td");
-            var tdText3 = document.createTextNode(datum.body);
+            var tdText3 = document.createTextNode(datum.description);
             td3.appendChild(tdText3);
 
             tr.appendChild(td1);
@@ -160,15 +105,23 @@ sock.on('listed', (data) => {
         });
 
         table.appendChild(tBody);
-        //table.setAttribute("border", "2");
 
         const parent = document.querySelector('#tables');
         parent.innerHTML = "";
 
         parent.appendChild(table);
     }
+    else {
+        const parent = document.querySelector('#tables');
+        parent.innerHTML = "";
+    }
     
-})
+});
+
+const csv = (e) => {
+    sock.emit('csv');
+}
+document.querySelector('#csv').addEventListener('click', csv);
 
 sock.on('title-exists', () => {
     alert("The title that you wish to create already exists");
@@ -185,6 +138,9 @@ sock.on('deleted', () => {
 sock.on('title-dne', () => {
     alert("the title does not exist");
 });
+
+
+sock.on('download', download("mongodb_to_csv_file.csv", "wow"));
 
 
 

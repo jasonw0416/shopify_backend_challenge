@@ -6,38 +6,33 @@
   </head>
   <body>
     <div class="rps-wrapper">
-      <ul id="events"></ul>
 
       <div class="button-wrapper">
-        <form id="chat-form">
-          <input id="chat" />
-          <button id="say">Say</button>
-        </form>
 
 
         <form id="create-form">
-          <p>title <input id="create-chat" />   
-            price <input type="number" id="create-price" />  
-            description <input id="create-description" />
+          <p>Title <input id="create-chat" />   
+            Price <input type="number" id="create-price" />  
+            Description <input id="create-description" />
             <button id="create"> CREATE</button></p>
         </form>
         <form id="delete-form">
-          <p>title <input id="delete-chat" />   
-            <!--price <input id="delete-price" />  
-            description <input id="delete-description" />-->
+          <p>Title <input id="delete-chat" />
             <button id="delete"> DELETE</button></p>
         </form>
         <form id="update-form">
-          <p>title <input id="update-chat1" />  
-            new title <input id="update-chat2" /> 
-            new price <input id="update-price" /> 
-            new description <input id="update-description" /> 
+          <p>Old Title <input id="update-chat1" />  
+            New Title <input id="update-chat2" /> 
+            New Price <input id="update-price" /> 
+            New Description <input id="update-description" /> 
             <button id="update">UPDATE</button></p>
         </form>
-        <button id="list">LIST</button>
         
       </div>
       <div id="tables"></div>
+      <a href="$./../../mongodb_to_csv_file.csv" download="Shopify_CSV_FILE">
+        <button id="csv">Export to .csv file</button>
+      </a>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>

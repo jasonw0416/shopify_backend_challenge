@@ -10,11 +10,11 @@ const blogSchema = new Schema({
         type: Number,
         required: true,
     },
-    body: {
+    description: {
         type: String,
         required: true
     }
-}, {timestampes: true});
+}, {versionKey: false});
 
 const Blog = mongoose.model('Blog', blogSchema);
 module.exports = Blog;

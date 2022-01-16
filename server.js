@@ -3,6 +3,9 @@ const express = require('express');
 const socketio = require('socket.io');
 const mongoose = require('mongoose');
 const Blog = require('./data');
+const Json2csvParser = require("json2csv").Parser;
+const fs = require("fs");
+
 
 
 
@@ -20,9 +23,6 @@ console.log(`Serving static from ${clientPath}`);
 
 app.use(express.static(clientPath));
 
-/*if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(clientPath));
-}*/
 
 const server = http.createServer(app);
 
@@ -46,7 +46,7 @@ io.on('connection', (sock) => {
           const blog = new Blog({
             title: text,
             price: text1,
-            body: text2
+            description: text2
           });
     
           blog.save()
@@ -75,8 +75,10 @@ io.on('connection', (sock) => {
         if (result.length > 0){
           Blog.deleteOne({title: text})
             .then((result) => {
-              if (result)
+              if (result){
+                listing();
                 sock.emit("deleted");
+              }
             })
             .catch((err) => {
                 console.log("ERROR in delete: ", err);
@@ -96,29 +98,74 @@ io.on('connection', (sock) => {
       deleting(text);
   });
 
-  sock.on('update', (text1, text2) => {
+  async function deleteForUpdate(text1){
+    await Blog.deleteOne({title: text1}).catch((err) => console.log("Error in deleting in update: ", err));
+  }
+
+  sock.on('update', (text1, text2, text3, text4) => {
       console.log('updating...');
-      deleting(text1);
-      creating(text2);
+      Blog.find({title: text1})
+        .then((result) => {
+          if(result.length > 0){
+            if (text2 == ""){
+              text2 = result[0].title;
+            }
+            if (text3 == ""){
+              text3 = result[0].price;
+            }
+            if (text4 == ""){
+              text4 = result[0].description;
+            }
+            deleteForUpdate(text1);
+            creating(text2, text3, text4);
+          }
+          else {
+            sock.emit('title-dne');
+          }
+        })
+        .catch((err) => {
+          console.log("Error in updating: ", err)
+        });
   });
 
   sock.on('list', function(){
-      listing()
+      listing();
   });
 
+  // https://stackoverflow.com/questions/67755728/export-the-data-from-a-mongo-db-database-in-a-csv
+  async function setCSV() {
+    await Blog.find({}).lean().exec((err, data) => {
+      if (err) throw err;
+      const csvFields = ['title', 'price', 'description'];
+      const json2csvParser = new Json2csvParser({csvFields});
+      const csvData = json2csvParser.parse(data);
+      fs.writeFileSync("./client/build/mongodb_to_csv_file.csv", csvData, function(error) {
+        if (error) throw error;
+        console.log("Successfully write to csv file");
+      });
+    });
+  }
+
   async function listing(){
-    Blog.find()
-        .then((result) => {
-            console.log("got it");
-            console.log(result);
-            sock.emit('listed', result);
-        })
-        .catch((err) => {
-            console.log("ERROR in list: ", err);
-        });
+    await Blog.find()
+      .then((result) => {
+        if (result.length > 0){
+          setCSV();
+        }
+        else {
+          fs.writeFileSync("./client/build/mongodb_to_csv_file.csv", "", function(){console.log("cleared csv file")});
+        }
+        console.log(result);
+        sock.emit('listed', result);
+      })
+      .catch((err) => {
+          console.log("ERROR in list: ", err);
+      });
+    
   }
 
   listing();
+  
   
 
 });
