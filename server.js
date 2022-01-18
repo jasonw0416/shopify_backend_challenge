@@ -141,7 +141,6 @@ io.on('connection', (sock) => {
       listing();
   });
 
-  // https://stackoverflow.com/questions/67755728/export-the-data-from-a-mongo-db-database-in-a-csv
   async function setCSV() {
     await Blog.find({}).lean().exec((err, data) => {
       if (err) throw err;
