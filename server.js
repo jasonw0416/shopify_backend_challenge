@@ -166,7 +166,7 @@ io.on('connection', (sock) => {
         else {
           fs.writeFileSync("./client/build/mongodb_to_csv_file.csv", "", function(){console.log("cleared csv file")});
         }
-        console.log(result);
+        //console.log(result);
         sock.emit('listed', result);
       })
       .catch((err) => {
@@ -177,7 +177,7 @@ io.on('connection', (sock) => {
 
   listing();
 
-  window.setInterval(listing, 1000);
+  setInterval(listing, 2000);
   
   
 
