@@ -74,7 +74,9 @@ io.on('connection', (sock) => {
   });
 
   async function deletion(text1){
-    await Blog.deleteOne({title: text1}).catch((err) => console.log("Error in deleting in update: ", err));
+    await Blog.deleteOne({title: text1})
+    .then(listing())
+    .catch((err) => console.log("Error in deleting in update: ", err));
   }
 
   async function deleting(text) {

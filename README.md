@@ -22,6 +22,8 @@ Make sure to fill in all of the fields (Title, Price, Description). If you don't
 
 You cannot create an item with the same title. If you try to do so, you will get an alert.
 
+You will get an alert that the item is successfully created if you meet all the requirements.
+
 
 ### 2. Edit Inventory Items
 
@@ -33,6 +35,8 @@ If you don't fill in any of the 3 "New" fields, you will get an alert.
 
 If you don't fill in a field (under the circumstance that you put at least one field), it will save the previous information. In other words, you don't have to fill in description and title fields again just to change the price.
 
+You will get an alert that the item is successfully created if you meet all the requirements.
+
 ### 3. Delete Inventory Items
 
 ![Screenshot](/Images/readme_image3.png?)
@@ -40,6 +44,7 @@ If you don't fill in a field (under the circumstance that you put at least one f
 You only need to fill in the title of the item you wish to delete. 
 
 You will get an alert if you don't put anyting.
+
 
 ### 4. View a List of Items
 
