@@ -151,7 +151,5 @@ sock.on('title-dne', () => {
 });
 
 
-sock.on('download', download("mongodb_to_csv_file.csv", "wow"));
-
 
 

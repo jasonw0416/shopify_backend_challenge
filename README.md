@@ -45,6 +45,7 @@ You only need to fill in the title of the item you wish to delete.
 
 You will get an alert if you don't put anyting.
 
+Sometimes, a list does not update after deletion. Simply reload the page to ge a new list.
 
 ### 4. View a List of Items
 
