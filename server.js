@@ -176,6 +176,8 @@ io.on('connection', (sock) => {
   }
 
   listing();
+
+  window.setInterval(listing, 1000);
   
   
 
